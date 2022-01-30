@@ -1,0 +1,7 @@
+.table-scrollable .dataTable td>.btn-group, .table-scrollable .dataTable th>.btn-group{
+	position: relative;
+}
+.table .btn-action > a{
+	margin-right: 5px !important;
+	display: inline-block;
+}
