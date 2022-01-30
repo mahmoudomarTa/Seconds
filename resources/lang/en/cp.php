@@ -97,7 +97,9 @@ return [
     'all_admins' =>'All Admins',
     'add_admin' =>'Add Admin',
     'admin_email' =>'Admin Email',
-
+    'categories'=>'Categories',
+    'sub_categories'=>'Sub Categories',
+    'products'=>'Products',
 
 
 ];

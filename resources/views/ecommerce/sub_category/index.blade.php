@@ -16,7 +16,9 @@
                                class="btn sbold green">{{__('cp.add')}}
                                 <i class="fa fa-plus"></i>
                             </a>
-
+                            <button class="btn sbold blue btn--filter">{{__('cp.filter')}}
+                                <i class="fa fa-search"></i>
+                            </button>
                             <button class="btn sbold green event"  href="#activation" role="button"  data-toggle="modal">{{__('cp.active')}}
                                 <i class="fa fa-check"></i>
                             </button>
@@ -27,7 +29,85 @@
                     </div>
 
                 </div>
+                <div class="box-filter-collapse">
+                    <form class="form-horizontal" method="get" action="{{'sub-categories'}}">
+                        <div class="row">
+{{--                            <div class="col-md-4">--}}
+{{--                                <div class="form-group row">--}}
+{{--                                    <label class="col-md-3 control-label">{{__('cp.email')}}</label>--}}
+{{--                                    <div class="col-md-9">--}}
+{{--                                        <input type="text" class="form-control" name="email" value="{{request('email')?request('email'):''}}"--}}
+{{--                                               placeholder="{{__('cp.email')}}">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">{{__('cp.category')}}</label>
+                                    <div class="col-md-9">
+                                        <select id="multiple2" class="form-control" name="category_id">
+                                            <option value="">{{__('cp.all')}}</option>
+
+                                            @foreach(\App\Models\ecommerce\Category::get() as $category)
+                                                <option value="{{$category->id}}" {{(Request::get('category_id') == $category->id) ? 'selected' : ''}}>
+                                                    {{$category->name}}
+                                                </option>
+                                            @endforeach
+
+{{--                                            --}}
+{{--                                            <option value="active" {{Request::get('statusUser') == 'active' ? 'selected' : ''}}>{{__('cp.active')}}</option>--}}
+{{--                                            <option value="not_active" {{Request::get('statusUser') == 'not_active' ? 'selected' : ''}}>{{__('cp.not_active')}}</option>--}}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">{{__('cp.status')}}</label>
+                                    <div class="col-md-9">
+                                        <select id="multiple2" class="form-control" name="status">
+                                            <option value="">{{__('cp.all')}}</option>
+                                            <option value="active" {{Request::get('status') == 'active' ? 'selected' : ''}}>{{__('cp.active')}}</option>
+                                            <option value="not_active" {{Request::get('status') == 'not_active' ? 'selected' : ''}}>{{__('cp.not_active')}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button type="submit" class="btn sbold blue">{{__('cp.search')}}
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <a href="{{url('admin/sub-categories')}}" type="submit"
+                                           class="btn sbold btn-default ">{{__('cp.reset')}}
+                                            <i class="fa fa-refresh"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+{{--                        <div class="row">--}}
+{{--                            <div class="col-md-4">--}}
+{{--                                <div class="form-group row">--}}
+{{--                                    <label class="col-md-3 control-label">{{__('cp.mobile')}}</label>--}}
+{{--                                    <div class="col-md-9">--}}
+{{--                                        <input type="text" class="form-control" name="mobile" value="{{request('mobile')?request('mobile'):''}}"--}}
+{{--                                               placeholder="{{__('cp.mobile')}}">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+
+
+{{--                        </div>--}}
+                    </form>
+                </div>
+                <br>
+                <br>
             </div>
+
+
             <table class="table table-striped table-bordered table-hover table-checkable order-column" id="toolsTable">
                 <thead>
                 <tr>
@@ -67,25 +147,19 @@
 
                         <td>
                             <div class="btn-group btn-action">
-                                <a href="{{'categories/'.$subCategory->id.'/edit'}}"
+                                <a href="{{'sub-categories/'.$subCategory->id.'/edit'}}"
                                    class="btn btn-xs blue tooltips" data-container="body" data-placement="top"
                                    data-original-title="{{__('cp.edit')}}"><i class="fa fa-edit"></i></a>
 
                             </div>
 
                             <div class="btn-group btn-action">
-                                <a href="{{'categories/'.$subCategory->id.'/delete'}}"
+                                <a href="{{'sub-categories/'.$subCategory->id.'/delete'}}"
                                    class="btn btn-xs red tooltips" data-container="body" data-placement="top"
                                    data-original-title="{{__('cp.delete')}}"><i class="fa fa-remove"></i></a>
 
                             </div>
 
-                            <div class="btn-group btn-action">
-                                <a href="{{$subCategory->id.'/products'}}"
-                                   class="btn btn-xs green tooltips" data-container="body" data-placement="top"
-                                   data-original-title="{{__('cp.products')}}"><i class="fa fa-angle-right"></i></a>
-
-                            </div>
                         </td>
 
                     </tr>
@@ -96,8 +170,17 @@
             </table>
         </div>
     </div>
+
+
 @endsection
 
+    @section('scripts')
+        <script>
+            $('.btn--filter').click(function () {
+                $('.box-filter-collapse').slideToggle(500);
+            });
+        </script>
+    @endsection
 {{--@section('js')--}}
 {{--@endsection--}}
 {{--@section('script')--}}

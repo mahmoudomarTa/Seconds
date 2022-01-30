@@ -6,6 +6,7 @@
 
 @section('page_container')
 
+
     <div class="portlet light bordered">
         <div class="portlet-body">
             <div class="table-toolbar">
@@ -77,13 +78,6 @@
                                 <a href="{{'categories/'.$category->id.'/delete'}}"
                                    class="btn btn-xs red tooltips" data-container="body" data-placement="top"
                                    data-original-title="{{__('cp.delete')}}"><i class="fa fa-remove"></i></a>
-
-                            </div>
-
-                            <div class="btn-group btn-action">
-                                <a href="{{$category->id.'/sub-categories'}}"
-                                   class="btn btn-xs green tooltips" data-container="body" data-placement="top"
-                                   data-original-title="{{__('cp.subCategories')}}"><i class="fa fa-angle-right"></i></a>
 
                             </div>
                         </td>

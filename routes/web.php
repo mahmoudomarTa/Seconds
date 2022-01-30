@@ -4,8 +4,8 @@ use App\Http\Controllers\dashboard\AdminController;
 use App\Http\Controllers\dashboard\CommentController;
 use App\Http\Controllers\dashboard\FeatureController;
 use App\Http\Controllers\dashboard\MessageContoller;
-use App\Http\Controllers\ecomerce\ProductController;
 use App\Http\Controllers\ecommerce\CategoryController;
+use App\Http\Controllers\ecommerce\ProductController;
 use App\Http\Controllers\ecommerce\SubCategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\landing_page\LandingPageController;
@@ -100,22 +100,22 @@ Route::group(['prefix'=>'admin'],function (){
     }
 
     if (Helpers::can('sub_categories')) {
-        Route::get('{category_id}/sub-categories', [SubCategoryController::class, 'index']);
-        Route::get('{category_id}/sub-categories/create', [SubCategoryController::class, 'create']);
-        Route::post('{category_id}/sub-categories/store', [SubCategoryController::class, 'store']);
-        Route::get('sub-categories/{sub_cat_id}/edit', [SubCategoryController::class, 'edit']);
+        Route::get('sub-categories', [SubCategoryController::class, 'index']);
+        Route::get('sub-categories/create', [SubCategoryController::class, 'create']);
+        Route::post('sub-categories/store', [SubCategoryController::class, 'store']);
+        Route::get('sub-categories/{id}/edit', [SubCategoryController::class, 'edit']);
         Route::post('sub-categories/{id}/update', [SubCategoryController::class, 'update']);
-        Route::get('sub-categories/{id}/delete', [SubCategoryController::class, 'delete']);
+        Route::get('sub-categories/{id}/delete', [SubCategoryController::class, 'destroy']);
     }
 
 
     if (Helpers::can('products')) {
-        Route::get('{sub_category_id}/products', [ProductController::class, 'index']);
-        Route::get('product/create', [ProductController::class, 'create']);
-        Route::post('product/store', [ProductController::class, 'store']);
-        Route::get('product/edit', [ProductController::class, 'edit']);
-        Route::post('product/update/{id}', [ProductController::class, 'update']);
-        Route::get('product/delete/{id}', [ProductController::class, 'delete']);
+        Route::get('products', [ProductController::class, 'index']);
+        Route::get('products/create', [ProductController::class, 'create']);
+        Route::post('products/store', [ProductController::class, 'store']);
+        Route::get('products/{id}/edit', [ProductController::class, 'edit']);
+        Route::post('products/{id}/update', [ProductController::class, 'update']);
+        Route::get('products/{id}/delete', [ProductController::class, 'delete']);
     }
 
 

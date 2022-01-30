@@ -711,6 +711,26 @@
             </li>
         @endif
 
+        @if(\App\Http\Helpers::can('sub_categories'))
+
+            <li class="nav-item {{(explode("/", request()->url())[4] == "sub-categories") ? "active start" : ''}} ">
+                <a href="{{url('admin/sub-categories')}}" class="nav-page-next">
+                    <i class="icon-graph"></i>
+                    <span class="title">{{__('cp.sub_categories')}}</span>
+                </a>
+            </li>
+        @endif
+
+        @if(\App\Http\Helpers::can('products'))
+
+            <li class="nav-item {{(explode("/", request()->url())[4] == "products") ? "active start" : ''}} ">
+                <a href="{{url('admin/products')}}" class="nav-page-next">
+                    <i class="icon-graph"></i>
+                    <span class="title">{{__('cp.products')}}</span>
+                </a>
+            </li>
+        @endif
+
 
 
 
@@ -994,6 +1014,8 @@
 <script src="{{asset('metronic/assets/layouts/global/scripts/quick-nav.min.js')}}" type="text/javascript"></script>
 
 
+<@yield('scripts')
+
 {{--<a style="    position: fixed;--}}
 {{--    bottom: 20px;--}}
 {{--    left: 10px;--}}
@@ -1004,6 +1026,7 @@
 {{--    width: 135px;--}}
 {{--    border-radius: 5px;--}}
 {{--    text-align: center;" href="{{url('index/'.app()->getLocale())}}">Landing Page</a>--}}
+
 </body>
 
 </html>

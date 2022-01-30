@@ -17,4 +17,12 @@ class Product extends Model
     protected $hidden = ['updated_at', 'deleted_at','translations'];
 
 
+    public function getImageAttribute($value)
+    {
+        if($value){
+            return url('uploads/images/products/'.$value);
+        }else{
+            return url('landing_page/images/est.png');
+        }
+    }
 }

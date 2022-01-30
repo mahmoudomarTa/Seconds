@@ -50,10 +50,6 @@ class CategoryController extends Controller
             $image->move(public_path('/uploads/images/category/'), $image_name);
             $cat->image = $image_name;
         }
-
-
-//        $cat->sub_id = 0;
-
         $cat->save();
         return redirect()->back();
 

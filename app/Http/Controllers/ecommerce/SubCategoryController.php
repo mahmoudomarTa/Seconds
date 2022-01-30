@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\ecommerce;
 
 use App\Http\Controllers\Controller;
-use App\Models\ecommerce\Category;
 use App\Models\ecommerce\SubCategory;
 use App\Models\general\Language;
 use Illuminate\Http\Request;
@@ -23,27 +22,22 @@ class SubCategoryController extends Controller
 
         }
 
-//        if ($request->has('available') ) {
-//            if ($request->get('available') != null)
-//            {
-//                $products->where('available', $request->get('available'));
-//            }
-//
-//        }
+        if ($request->has('status')) {
+            if ($request->get('status') != null) {
+                $subCategories->where('status', $request->get('status'));
+            }
+
+        }
 
         $subCategories = $subCategories->orderBy('id', 'desc')->get();//paginate(20);
         return view('ecommerce.sub_category.index', [
             'subCategories' => $subCategories,
         ]);
-
-//        $subCategories = SubCategory::where('category_id', $category_id)->get();
-//        return view('ecommerce.sub_category.index')->with(compact('category_id', 'subCategories'));
     }
 
     function create()
     {
-        $categories = Category::all();
-        return view('ecommerce.sub_category.create')->with(compact('categories'));
+        return view('ecommerce.sub_category.create');//->with(compact('categories'));
     }
 
     function store(Request $request)
@@ -63,6 +57,7 @@ class SubCategoryController extends Controller
 
         $sub = new SubCategory();
         $sub->category_id = $request->category_id;
+        $sub->status = $request->get('status');
 
         foreach ($locales as $locale) {
             $sub->translateOrNew($locale)->name = $request->get('name_' . $locale);
@@ -84,18 +79,54 @@ class SubCategoryController extends Controller
 
     }
 
-    function edit()
+    function edit($id)
     {
-
+        $subCategory = SubCategory::where('id', $id)->first();
+        return view('ecommerce.sub_category.edit')->with(compact('subCategory'));
     }
 
-    function update()
+    function update(Request $request, $id)
     {
+        $roles = [
+            'image' => 'required|image|mimes:jpeg,jpg,png',
+            // 'name'     => 'required',
 
+        ];
+        $locales = Language::all()->pluck('lang');
+        foreach ($locales as $locale) {
+            $roles['name_' . $locale] = 'required';
+        }
+        $this->validate($request, $roles);
+
+
+        $sub = SubCategory::query()->findOrFail($id);
+        $sub->category_id = $request->category_id;
+        $sub->status = $request->get('status');
+
+        foreach ($locales as $locale) {
+            $sub->translateOrNew($locale)->name = $request->get('name_' . $locale);
+        }
+
+        if ($request['image'] != null) {
+            $image = $request->file('image');
+            $image_name = time() + rand(1, 1000000) . '.' . $image->getClientOriginalName();
+            $image->move(public_path('/uploads/images/sub_category/'), $image_name);
+            $sub->image = $image_name;
+        }
+
+        $sub->save();
+
+        return redirect()->back()->with('status', __('cp.update'));
     }
 
-    function delete()
-    {
 
+    function destroy($id)
+    {
+        $item = SubCategory::query()->findOrFail($id);
+        if ($item) {
+            SubCategory::query()->where('id', $id)->delete();
+            return redirect()->back()->with('success',"success");
+        }
+        return "fail";
     }
 }

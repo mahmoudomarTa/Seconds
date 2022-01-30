@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    <form method="post" action="{{url('admin/'.$category_id.'/sub-categories/store')}}"
+                    <form method="post" action="{{url('admin/sub-categories/store')}}"
                           enctype="multipart/form-data" class="form-horizontal" role="form" id="form_city">
                         {{ csrf_field() }}
 
@@ -42,6 +42,37 @@
                                 @endforeach
                             </fieldset>
 
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">{{__('cp.category')}}</label>
+                                    <div class="col-md-9">
+                                        <select id="multiple2" class="form-control" name="category_id">
+                                            <option value="">{{__('cp.all')}}</option>
+
+                                            @foreach(\App\Models\ecommerce\Category::get() as $category)
+                                                <option value="{{$category->id}}" {{(Request::get('category_id') == $category->id) ? 'selected' : ''}}>
+                                                    {{$category->name}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">{{__('cp.status')}}</label>
+                                    <div class="col-md-9">
+                                        <select id="multiple2" class="form-control" name="status">
+                                            <option value="active" {{Request::get('status') == 'active' ? 'selected' : ''}}>{{__('cp.active')}}</option>
+                                            <option value="not_active" {{Request::get('status') == 'not_active' ? 'selected' : ''}}>{{__('cp.not_active')}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
 
                             <fieldset>
                                 <legend>{{__('cp.logo')}}</legend>
@@ -66,11 +97,13 @@
                             </fieldset>
 
 
+
+
                             <div class="form-actions">
                                 <div class="row">
                                     <div class="col-md-offset-3 col-md-9">
                                         <button type="submit" class="btn green">{{__('cp.add')}}</button>
-                                        <a href="{{url('admin/'.$category_id.'/sub-categories')}}" class="btn default">{{__('cp.cancel')}}</a>
+                                        <a href="{{url('admin/sub-categories')}}" class="btn default">{{__('cp.cancel')}}</a>
                                     </div>
                                 </div>
                             </div>
