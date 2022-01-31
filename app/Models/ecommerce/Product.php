@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models\ecommerce;
-
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +14,11 @@ class Product extends Model
     protected $table = 'products';
     protected $fillable = ['image' , 'price' ,'discount', 'offer_from' ,'offer_to'];
     protected $hidden = ['updated_at', 'deleted_at','translations'];
+
+
+    public function attachments(){
+        return $this->hasMany(ProductImage::class,'product_id');
+    }
 
 
     public function getImageAttribute($value)

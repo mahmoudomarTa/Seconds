@@ -45,12 +45,14 @@ class SubCategoryController extends Controller
 
         $roles = [
             'image' => 'required|image|mimes:jpeg,jpg,png',
+            'category_id' => 'required',
+            'status' => 'required',
             // 'name'     => 'required',
 
         ];
         $locales = Language::all()->pluck('lang');
         foreach ($locales as $locale) {
-            $roles['name_' . $locale] = 'required';
+            $roles['name_' . $locale] = 'required|min:5';
         }
         $this->validate($request, $roles);
 
@@ -89,12 +91,14 @@ class SubCategoryController extends Controller
     {
         $roles = [
             'image' => 'required|image|mimes:jpeg,jpg,png',
+            'category_id' => 'required',
+            'status' => 'required',
             // 'name'     => 'required',
 
         ];
         $locales = Language::all()->pluck('lang');
         foreach ($locales as $locale) {
-            $roles['name_' . $locale] = 'required';
+            $roles['name_' . $locale] = 'required|min:5';
         }
         $this->validate($request, $roles);
 

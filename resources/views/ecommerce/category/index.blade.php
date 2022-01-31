@@ -7,6 +7,22 @@
 @section('page_container')
 
 
+    @if (Session::has('success'))
+        <div class="alert alert-success">
+            <h5>
+                {{Session::get('success')}}
+            </h5>
+        </div>
+    @elseif(Session::has('error'))
+        <div class="alert alert-danger">
+            <h5>
+                {{Session::get('error')}}
+            </h5>
+        </div>
+    @endif
+
+
+
     <div class="portlet light bordered">
         <div class="portlet-body">
             <div class="table-toolbar">
@@ -76,6 +92,7 @@
 
                             <div class="btn-group btn-action">
                                 <a href="{{'categories/'.$category->id.'/delete'}}"
+                                   onclick="return confirm('Are you sure?')"
                                    class="btn btn-xs red tooltips" data-container="body" data-placement="top"
                                    data-original-title="{{__('cp.delete')}}"><i class="fa fa-remove"></i></a>
 

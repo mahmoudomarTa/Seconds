@@ -27,7 +27,7 @@
                             <fieldset>
                                 @foreach($locales as $locale)
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="title_{{$locale->lang}}">
+                                        <label class="col-sm-2 control-label" for="name_{{$locale->lang}}">
                                             {{__('cp.name_'.$locale->lang)}}
                                             <span class="symbol">*</span>
                                         </label>
@@ -36,6 +36,9 @@
 
                                                    id="name_{{$locale->lang}}"
                                                    value="{{$subCategory->translate($locale->lang)->name}}" required>
+                                            @if($errors->has('name_'.$locale->lang))
+                                                <div class="alert alert-danger">{{ $errors->first('name_'.$locale->lang)}}</div>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -46,8 +49,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.category')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="category_id">
-                                            <option value="">{{__('cp.all')}}</option>
+                                        <select id="multiple2" class="form-control" name="category_id" required>
+                                            <option value="">{{__('cp.select')}}</option>
 
                                             @foreach(\App\Models\ecommerce\Category::get() as $category)
                                                 <option value="{{$category->id}}" {{($subCategory->category_id == $category->id) ? 'selected' : ''}}>
@@ -63,7 +66,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.status')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="status">
+                                        <select id="multiple2" class="form-control" name="status" required>
                                             <option value="active" {{$subCategory->status == 'active' ? 'selected' : ''}}>{{__('cp.active')}}</option>
                                             <option value="not_active" {{$subCategory->status == 'not_active' ? 'selected' : ''}}>{{__('cp.not_active')}}</option>
                                         </select>
@@ -71,6 +74,15 @@
                                 </div>
                             </div>
                             <br>
+                            <br>
+                            <div>
+                                @if($errors->has('category_id'))
+                                    <div class="alert alert-danger">{{ $errors->first('category_id')}}</div>
+                                @endif
+                                @if($errors->has('status'))
+                                    <div class="alert alert-danger">{{ $errors->first('status')}}</div>
+                                @endif
+                            </div>
                             <br>
                             <br>
 
@@ -94,6 +106,9 @@
                                                 {{Lang::get('cp.remove')}}
                                             </a>
                                         </div>
+                                        @if($errors->has('image'))
+                                            <div class="alert alert-danger">{{ $errors->first('image')}}</div>
+                                        @endif
                                     </div>
                                 </div>
                             </fieldset>

@@ -7,6 +7,21 @@
 @section('page_container')
 
 
+    @if (Session::has('success'))
+        <div class="alert alert-success">
+            <h5>
+                {{Session::get('success')}}
+            </h5>
+        </div>
+    @elseif(Session::has('error'))
+        <div class="alert alert-danger">
+            <h5>
+                {{Session::get('error')}}
+            </h5>
+        </div>
+    @endif
+
+
     <div class="row">
         <div class="col-md-12">
             <!-- BEGIN SAMPLE FORM PORTLET-->
@@ -35,14 +50,37 @@
                                             <input type="text" class="form-control" name="name_{{$locale->lang}}"
 
                                                    id="name_{{$locale->lang}}"
-                                                   value="{{ old('name_'.$locale->lang) }}" required>
+                                                   value="{{ old('name_'.$locale->lang) }}" required minlength="5">
+                                            @if($errors->has('name_'.$locale->lang))
+                                                <div class="alert alert-danger">{{ $errors->first('name_'.$locale->lang)}}</div>
+                                            @endif
                                         </div>
                                     </div>
 
                                 @endforeach
                             </fieldset>
 
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="col-md-3 control-label">{{__('cp.status')}}</label>
+                                    <div class="col-md-9">
+                                        <select id="multiple2" class="form-control" name="status" required>
+                                            <option value="active" {{Request::get('status') == 'active' ? 'selected' : ''}}>{{__('cp.active')}}</option>
+                                            <option value="not_active" {{Request::get('status') == 'not_active' ? 'selected' : ''}}>{{__('cp.not_active')}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <br>
+                            <br>
+                            <div>
+                                @if($errors->has('status'))
+                                    <div class="alert alert-danger">{{ $errors->first('status')}}</div>
+                                @endif
+                            </div>
+                            <br>
+                            <br>
                             <fieldset>
                                 <legend>{{__('cp.logo')}}</legend>
                                 <div class="col-md-9">
@@ -56,11 +94,16 @@
                                                                 <span class="fileinput-exists">
                                                                 {{Lang::get('cp.change')}}
                                                                 </span>
-                                                                <input type="file" name="image"> </span>
+                                                                <input type="file" name="image" required>
+                                                            </span>
                                             <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput">
                                                 {{Lang::get('cp.remove')}}
                                             </a>
                                         </div>
+                                        <br>
+                                        @if($errors->has('image'))
+                                            <div class="alert alert-danger">{{ $errors->first('image')}}</div>
+                                        @endif
                                     </div>
                                 </div>
                             </fieldset>

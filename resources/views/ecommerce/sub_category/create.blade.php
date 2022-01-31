@@ -27,7 +27,7 @@
                             <fieldset>
                                 @foreach($locales as $locale)
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label" for="title_{{$locale->lang}}">
+                                        <label class="col-sm-2 control-label" for="name_{{$locale->lang}}">
                                             {{__('cp.name_'.$locale->lang)}}
                                             <span class="symbol">*</span>
                                         </label>
@@ -35,7 +35,10 @@
                                             <input type="text" class="form-control" name="name_{{$locale->lang}}"
 
                                                    id="name_{{$locale->lang}}"
-                                                   value="{{ old('name_'.$locale->lang) }}" required>
+                                                   value="{{ old('name_'.$locale->lang) }}" required minlength="5">
+                                            @if($errors->has('name_'.$locale->lang))
+                                                <div class="alert alert-danger">{{ $errors->first('name_'.$locale->lang)}}</div>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -46,8 +49,8 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.category')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="category_id">
-                                            <option value="">{{__('cp.all')}}</option>
+                                        <select id="multiple2" class="form-control" name="category_id" required>
+                                            <option value="">{{__('cp.select')}}</option>
 
                                             @foreach(\App\Models\ecommerce\Category::get() as $category)
                                                 <option value="{{$category->id}}" {{(Request::get('category_id') == $category->id) ? 'selected' : ''}}>
@@ -56,23 +59,37 @@
                                             @endforeach
                                         </select>
                                     </div>
+
                                 </div>
                             </div>
+
 
                             <div class="col-md-4">
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.status')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="status">
+                                        <select id="multiple2" class="form-control" name="status" required>
                                             <option value="active" {{Request::get('status') == 'active' ? 'selected' : ''}}>{{__('cp.active')}}</option>
                                             <option value="not_active" {{Request::get('status') == 'not_active' ? 'selected' : ''}}>{{__('cp.not_active')}}</option>
                                         </select>
                                     </div>
+
                                 </div>
                             </div>
+
                             <br>
                             <br>
+                                <div>
+                                    @if($errors->has('category_id'))
+                                        <div class="alert alert-danger">{{ $errors->first('category_id')}}</div>
+                                    @endif
+                                    @if($errors->has('status'))
+                                        <div class="alert alert-danger">{{ $errors->first('status')}}</div>
+                                    @endif
+                                </div>
                             <br>
+                            <br>
+
 
                             <fieldset>
                                 <legend>{{__('cp.logo')}}</legend>
@@ -92,6 +109,9 @@
                                                 {{Lang::get('cp.remove')}}
                                             </a>
                                         </div>
+                                        @if($errors->has('image'))
+                                            <div class="alert alert-danger">{{ $errors->first('image')}}</div>
+                                        @endif
                                     </div>
                                 </div>
                             </fieldset>
