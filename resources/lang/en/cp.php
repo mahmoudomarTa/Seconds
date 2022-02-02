@@ -124,6 +124,21 @@ return [
     'status'=>'Status',
     'addProduct'=>'Add Product',
     'editProduct'=>'Edit Product',
+    'price '=>'Price ',
+    'subCategory'=>'Sub Category',
+    'discount '=>'Discount ',
+    'offer_time'=>'Offer Time ',
+    'from'=>'From',
+    'price'=>'Price',
+    'discount'=>'Discount',
+    'available'=>'Available',
+    'not_available'=>'Not Available',
+    'availability'=>'Availability',
+    'no_discount'=>'No Discount',
+    'images'=>'Images',
+    'addImages'=>'Add Images',
+    'description_en'=>'English Description',
+    'description_ar'=>'Arabic Description',
 
 
 

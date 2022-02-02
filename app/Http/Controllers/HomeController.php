@@ -234,4 +234,43 @@ class HomeController extends Controller
         }
     }
 
+
+
+    public function changeStatus($model,Request $request)
+    {
+        $role = "";
+        if($model == "admins") $role = 'App\Admin';
+        if($model == "users") $role = 'App\User';
+        if($model == "promotions") $role = 'App\Models\PromotionCode';
+
+        if($model == "owners") $role = 'App\User';
+        if($model == "categories") $role = 'App\Models\Category';
+        if($model == "eventCategories") $role = 'App\Models\EventCategory';
+        if($model == "products") $role = 'App\Models\ecommerce\Product';
+        if($model == "ads") $role = 'App\Models\Ad';
+        if($model == "cities") $role = 'App\Models\City';
+        if($model == "giftcards") $role = 'App\Models\Giftcard';
+        if($model == "pages") $role = 'App\Models\Page';
+        if($model == "questions") $role = 'App\Models\Question';
+        if($model == "additions") $role = 'App\Models\Addition';
+        if($model == "notifications") $role = 'App\Models\Notification';
+        if($model == "customerComments") $role = 'App\Models\CustomerComment';
+
+        if($role !=""){
+            if ($request->action == 'delete') {
+                $role::query()->whereIn('id', $request->IDsArray)->delete();
+            }
+            else {
+                if($request->action) {
+                    $role::query()->whereIn('id', $request->IDsArray)->update(['status' => $request->action]);
+                }
+            }
+
+            return $request->action;
+        }
+        return false;
+
+
+    }
+
 }

@@ -94,7 +94,8 @@ class CategoryController extends Controller
     {
         $item = Category::query()->findOrFail($id);
         if ($item) {
-            Category::query()->where('id', $id)->delete();
+            $status = Category::query()->where('id', $id)->delete();
+            if ($status)
             return redirect()->back()->with('success', __('cp.deleted_successfully'));
         }
         return redirect()->back()->with('error', __('cp.something_wrong'));

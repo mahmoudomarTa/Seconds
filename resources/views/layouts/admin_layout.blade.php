@@ -770,7 +770,155 @@
     </div>
 </div>
 
+<div id="activation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">{{__('cp.activation')}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{__('cp.confirmActiveAll')}} </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn default" data-dismiss="modal" aria-hidden="true">{{__('cp.cancel')}}</button>
+                <a href="#" class="confirmAll" data-action="active">
+                    <button class="btn btn-success">{{__('cp.Yes')}}</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div id="cancel_activation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">{{__('cp.cancel_activation')}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{__('cp.confirmNotActiveAll')}} </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn default" data-dismiss="modal" aria-hidden="true">{{__('cp.cancel')}}</button>
+                <a href="#" class="confirmAll" data-action="not_active"><button class="btn btn-success">{{__('cp.Yes')}}</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+
+
+    var IDArray = [];
+    $("input:checkbox[name=chkBox]:checked").each(function () {
+        IDArray.push($(this).val());
+    });
+    if (IDArray.length == 0) {
+        $('.event').attr('disabled', 'disabled');
+    }
+    $('.chkBox').on('change', function () {
+        var IDArray = [];
+        $("input:checkbox[name=chkBox]:checked").each(function () {
+            IDArray.push($(this).val());
+        });
+        if (IDArray.length == 0) {
+            $('.event').attr('disabled', 'disabled');
+        } else {
+            $('.event').removeAttr('disabled');
+        }
+    });
+    $('.confirmAll').on('click', function (e) {
+        e.preventDefault();
+        var action = $(this).data('action');
+        document.write(Request::segment(3));
+        var url = "{{ 'admin/changeStatus/'.Request::segment(2)}}";
+        var csrf_token = '{{csrf_token()}}';
+        var IDsArray = [];
+        $("input:checkbox[name=chkBox]:checked").each(function () {
+            IDsArray.push($(this).val());
+        });
+
+        if (IDsArray.length > 0) {
+            $.ajax({
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': csrf_token},
+                url: url,
+                data: {action: action, IDsArray: IDsArray, _token: csrf_token},
+                success: function (response) {
+                    if (response === 'active') {
+                        //alert('fsvf');
+                        $.each(IDsArray, function (index, value) {
+                            $('#label-' + value).removeClass('label-danger');
+                            $('#label-' + value).addClass('label-info');
+                            $r = '{{app()->getLocale()}}';
+                            if($r == 'ar'){
+                                $('#label-' + value).text('فعال ');
+                            }else{
+                                $('#label-' + value).text('active');
+                            }
+                        });
+                        $('#activation').modal('hide');
+                    } else if (response === 'not_active') {
+                        //alert('fg');
+                        $.each(IDsArray, function (index, value) {
+                            $('#label-' + value).removeClass('label-info');
+                            $('#label-' + value).addClass('label-danger');
+                            $r = '{{app()->getLocale()}}';
+                            if($r == 'ar'){
+                                $('#label-' + value).text('غير فعال');
+                            }else{
+                                $('#label-' + value).text('Not Active');
+
+                            }
+                        });
+                        $('#cancel_activation').modal('hide');
+                    } else if (response === 'delete') {
+                        $.each(IDsArray, function (index, value) {
+                            $('#tr-' + value).hide(2000);
+                        });
+                        $('#deleteAll').modal('hide');
+                    }
+
+                    IDArray = [];
+                    $("input:checkbox[name=chkBox]:checked").each(function () {
+                        $(this).prop('checked', false);
+                    });
+                    $('.event').attr('disabled', 'disabled');
+
+                },
+                fail: function (e) {
+                    alert(e);
+                }
+            });
+        } else {
+            alert('{{__('cp.not_selected')}}');
+        }
+    });
+
+
+
+
+    function readURLMultiple(input, target) {
+       //alert(target.length);
+        if (input.files) {
+            var filesAmount = input.files.length;
+            for (var i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    target.append('<div class="imageBox text-center" style="width:150px;height:190px;margin:5px"><img src="' + event.target.result + '" style="width:150px;height:150px"><button class="btn btn-danger deleteImage" type="button">{{__("cp.delete")}}</button><input class="attachedValues" type="hidden" name="filename[]" value="' + event.target.result + '"></div>');
+                };
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    }
+
+</script>
 <script src="{{asset('metronic/assets/global/plugins/jquery.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('metronic/assets/global/plugins/js.cookie.min.js')}}" type="text/javascript"></script>
@@ -799,7 +947,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-@yield('scripts')
 
 <script src="{{asset('metronic/assets/global/plugins/jquery.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('metronic/assets/global/plugins/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script>

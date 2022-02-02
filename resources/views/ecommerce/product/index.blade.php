@@ -6,6 +6,7 @@
 
 @section('page_container')
 
+
     <div class="portlet light bordered">
         <div class="portlet-body">
             <div class="table-toolbar">
@@ -112,6 +113,9 @@
                     </th>
                     <th> {{ucwords(__('cp.image'))}}</th>
                     <th> {{ucwords(__('cp.name'))}}</th>
+                    <th> {{ucwords(__('cp.price'))}}</th>
+                    <th> {{ucwords(__('cp.discount'))}}</th>
+                    <th> {{ucwords(__('cp.availability'))}}</th>
 
                     {{--                    <th> {{ucwords(__('cp.status'))}}</th>--}}
                     <th> {{ucwords(__('cp.created'))}}</th>
@@ -128,10 +132,12 @@
                             </label>
                         </td>
 
-                        <td><img src="{{$product->image}}" width="50px" height="50px"></td>
+                        <td><img src="{{$product->logo}}" width="50px" height="50px"></td>
 
                         <td>{{$product->name}}</td>
-
+                        <td>@if($product->priceOffer==$product->price) {{$product->price}} @else <del style="color: red;">{{$product->price}}</del> => {{$product->priceOffer}}  @endif</td>
+                        <td>@if($product->finalDiscount>0) {{$product->finalDiscount}}% @else{{__('cp.no_discount')}} @endif</td>
+                        <td style="color: {{$product->status=='active' ? "lime": 'red' }}">@if($product->status=='active') {{__('cp.available')}} @else {{__('cp.not_available')}} @endif</td>
                         {{--                        <td> <span class="label label-sm {{($category->status == "active")--}}
                         {{--                                ? "label-info" : "label-danger"}}" id="label-{{$category->id}}">--}}
 
@@ -149,11 +155,30 @@
 
                             </div>
 
-                            <div class="btn-group btn-action">
-                                <a href="{{'products/'.$product->id.'/delete'}}"
-                                   class="btn btn-xs red tooltips" data-container="body" data-placement="top"
-                                   data-original-title="{{__('cp.delete')}}"><i class="fa fa-remove"></i></a>
+{{--                            <div class="btn-group btn-action">--}}
+{{--                                <a href="{{'products/'.$product->id}}"--}}
+{{--                                   class="btn btn-xs red tooltips" data-container="body" data-placement="top"--}}
+{{--                                   data-original-title="{{__('cp.delete')}}"><i class="fa fa-remove"></i></a>--}}
 
+{{--                            </div>--}}
+                            <a href="#myModal{{$product->id}}" role="button"  data-toggle="modal" class="btn btn-xs red tooltips"><i class="fa fa-times" aria-hidden="true"></i></a>
+
+                            <div id="myModal{{$product->id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                            <h4 class="modal-title">{{__('cp.delete')}}</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>{{__('cp.confirm')}} </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn default" data-dismiss="modal" aria-hidden="true">{{__('cp.cancel')}}</button>
+                                            <a href="#" onclick="delete_adv('{{$product->id}}','{{$product->id}}',event)"><button class="btn btn-danger">{{__('cp.delete')}}</button></a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </td>
@@ -172,6 +197,38 @@
 
 @section('scripts')
     <script>
+
+
+        function delete_adv(id, iss_id, e) {
+            e.preventDefault();
+            console.log(id);
+            console.log(iss_id);
+            var url = 'products/'+id+'/delete';
+            var csrf_token = '{{csrf_token()}}';
+            $.ajax({
+                type: 'get',
+                headers: {'X-CSRF-TOKEN': csrf_token},
+                url: url,
+                data: {_method: 'get'},
+                success: function (response) {
+                    console.log(response);
+                    if (response === 'success') {
+                        $('#tr-' + id).hide(500);
+                        $('#myModal' + id).modal('toggle');
+                    } else {
+                        // swal('Error', {icon: "error"});
+                    }
+                },
+                error: function (e) {
+                    // swal('exception', {icon: "error"});
+                }
+            });
+
+        }
+
+
+
+
         $('.btn--filter').click(function () {
             $('.box-filter-collapse').slideToggle(500);
         });

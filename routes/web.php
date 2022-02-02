@@ -59,9 +59,9 @@ Route::post('admin/logout', [AdminController::class, 'logout'])->middleware(['au
 Route::get('admin/home/{local}', [HomeController::class, 'index'])->middleware(['auth:admin']);
 Route::post('home/update', [HomeController::class, 'update'])->middleware(['auth:admin']);
 
-Route::get('index/{local}',[LandingPageController::class,'index'])->middleware(['auth:admin']);
-Route::get('twitter/{local}',[LandingPageController::class,'twitter'])->middleware(['auth:admin']);
-Route::post('message/store',[LandingPageController::class,'storeMessage'])->middleware(['auth:admin']);
+Route::get('index/{local}',[LandingPageController::class,'index']);
+Route::get('twitter/{local}',[LandingPageController::class,'twitter']);
+Route::post('message/store',[LandingPageController::class,'storeMessage']);
 
 
 Route::get('feature/index/{local}',[FeatureController::class,'index'])->middleware('auth:admin');
@@ -90,6 +90,8 @@ Route::get('admin/delete/{id}',[AdminController::class,'destroy'])->middleware('
 
 
 Route::group(['prefix'=>'admin'],function (){
+    Route::post('changeStatus/{model}', [HomeController::class,'changeStatus']);
+
     if (Helpers::can('categories')) {
         Route::get('categories', [CategoryController::class, 'index']);
         Route::get('categories/create', [CategoryController::class, 'create']);

@@ -80,6 +80,8 @@
                                 @endif
                             </div>
                             <br>
+
+
                             <br>
                             <fieldset>
                                 <legend>{{__('cp.logo')}}</legend>
