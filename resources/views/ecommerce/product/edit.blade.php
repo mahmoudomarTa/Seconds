@@ -6,7 +6,6 @@
 
 @section('page_container')
 
-
     @if (Session::has('success'))
         <div class="alert alert-success">
             <h5>
@@ -20,6 +19,7 @@
             </h5>
         </div>
     @endif
+
 
 
     <div class="row">
@@ -105,7 +105,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.category')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="category_id">
+                                        <select id="category" class="form-control" name="category_id">
                                             <option value="">{{__('cp.select')}}</option>
 
                                             @foreach(\App\Models\ecommerce\Category::get() as $category)
@@ -124,14 +124,16 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.subCategory')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="sub_category_id" required>
+                                        <select id="subcategory" class="form-control" name="sub_category_id" required>
                                             <option value="">{{__('cp.select')}}</option>
 
                                             @foreach(\App\Models\ecommerce\SubCategory::get() as $subCategory)
+                                                @if($subCategory->category_id==$product->category_id)
                                                 <option
                                                     value="{{$subCategory->id}}" {{($subCategory->id ==$product->sub_category_id) ? 'selected' : ''}}>
                                                     {{$subCategory->name}}
                                                 </option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
@@ -157,8 +159,8 @@
                                 @if($errors->has('category_id'))
                                     <div class="alert alert-danger">{{ $errors->first('category_id')}}</div>
                                 @endif
-                                @if($errors->has('category_id'))
-                                    <div class="alert alert-danger">{{ $errors->first('category_id')}}</div>
+                                @if($errors->has('sub_category_id'))
+                                    <div class="alert alert-danger">{{ $errors->first('sub_category_id')}}</div>
                                 @endif
                                 @if($errors->has('status'))
                                     <div class="alert alert-danger">{{ $errors->first('status')}}</div>
@@ -166,17 +168,6 @@
                             </div>
                             <br>
 
-                            <div>
-                                @if($errors->has('category_id'))
-                                    <div class="alert alert-danger">{{ $errors->first('category_id')}}</div>
-                                @endif
-                                @if($errors->has('category_id'))
-                                    <div class="alert alert-danger">{{ $errors->first('category_id')}}</div>
-                                @endif
-                                @if($errors->has('status'))
-                                    <div class="alert alert-danger">{{ $errors->first('status')}}</div>
-                                @endif
-                            </div>
 
                             <hr>
 
@@ -324,6 +315,35 @@
 
             readURLMultiple(this, $('.imageupload'));
 
+        });
+    </script>
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document).ready(function () {
+            $('#category').on('change',function(e) {
+                var cat_id = e.target.value;
+                $.ajax({
+                    url:"{{ url('subcat') }}",
+                    type:"POST",
+                    data: {
+                        cat_id: cat_id,
+                        _token: '{{csrf_token()}}'
+                    },
+                    dataType: 'json',
+                    success:function (data) {
+                        $('#subcategory').empty();
+                        // $('#subcategory').attr("disabled", false);
+                        $.each(data.subcategories,function(index,subcategory){
+                            $('#subcategory').append('<option value="'+subcategory.id+'">'+subcategory.name+'</option>');
+                        })
+                    }
+                })
+            });
         });
     </script>
 @endsection

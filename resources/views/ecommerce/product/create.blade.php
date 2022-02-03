@@ -106,7 +106,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.category')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="category_id" required>
+                                        <select id="category" class="form-control" name="category_id" required>
                                             <option value="">{{__('cp.select')}}</option>
 
                                             @foreach(\App\Models\ecommerce\Category::get() as $category)
@@ -125,16 +125,10 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.subCategory')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="sub_category_id" required>
-                                            <option value="">{{__('cp.select')}}</option>
-
-                                            @foreach(\App\Models\ecommerce\SubCategory::get() as $subCategory)
-                                                <option
-                                                    value="{{$subCategory->id}}" {{(Request::get('sub_category_id') == $subCategory->id) ? 'selected' : ''}}>
-                                                    {{$subCategory->name}}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <div class="col-md-9">
+                                            <select class="form-control" name="sub_category_id" id="subcategory" disabled>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,6 +307,37 @@
 
             readURLMultiple(this, $('.imageupload'));
 
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document).ready(function () {
+            $('#category').on('change',function(e) {
+                var cat_id = e.target.value;
+                $.ajax({
+                    url:"{{ url('subcat') }}",
+                    type:"POST",
+                    data: {
+                        cat_id: cat_id,
+                        _token: '{{csrf_token()}}'
+                    },
+                    dataType: 'json',
+                    success:function (data) {
+                        $('#subcategory').empty();
+                        $('#subcategory').attr("disabled", false);
+                        $.each(data.subcategories,function(index,subcategory){
+                            $('#subcategory').append('<option value="'+subcategory.id+'">'+subcategory.name+'</option>');
+                        })
+                    }
+                })
+            });
         });
     </script>
 @endsection

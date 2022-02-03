@@ -2,6 +2,9 @@
 
 <html lang="en" @if(app()->getLocale()=='ar') dir="rtl" lang="ar" @endif >
 <head>
+
+    <meta name="csrf-token" content="{{csrf_token()}}">
+
     <meta charset="utf-8"/>
     <title>{{(explode("/" , request()->url())[3])}}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -816,6 +819,7 @@
 
 
     var IDArray = [];
+
     $("input:checkbox[name=chkBox]:checked").each(function () {
         IDArray.push($(this).val());
     });
@@ -835,8 +839,8 @@
     });
     $('.confirmAll').on('click', function (e) {
         e.preventDefault();
+
         var action = $(this).data('action');
-        document.write(Request::segment(3));
         var url = "{{ 'admin/changeStatus/'.Request::segment(2)}}";
         var csrf_token = '{{csrf_token()}}';
         var IDsArray = [];

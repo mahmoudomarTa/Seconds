@@ -47,6 +47,10 @@ Route::get('/', function () {
 //});
 
 
+Route::post('admin/changeStatus/{model}', [HomeController::class,'changeStatus']);
+
+Route::post('subcat', [CategoryController::class, 'subCat']);
+
 Route::view('admin/login', 'admin.dashboard.admin.login')->middleware(['guest:admin']);
 Route::post('admin/check', [AdminController::class, 'check'])->middleware(['guest:admin']);
 Route::get('admin/dashboard/home/{local}', [HomeController::class, 'index'])->middleware(['auth:admin']);
@@ -90,7 +94,6 @@ Route::get('admin/delete/{id}',[AdminController::class,'destroy'])->middleware('
 
 
 Route::group(['prefix'=>'admin'],function (){
-    Route::post('changeStatus/{model}', [HomeController::class,'changeStatus']);
 
     if (Helpers::can('categories')) {
         Route::get('categories', [CategoryController::class, 'index']);

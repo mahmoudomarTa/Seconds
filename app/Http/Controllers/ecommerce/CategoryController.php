@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ecommerce;
 
 use App\Http\Controllers\Controller;
 use App\Models\ecommerce\Category;
+use App\Models\ecommerce\SubCategory;
 use App\Models\general\Language;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
@@ -89,6 +90,21 @@ class CategoryController extends Controller
         return redirect()->back()->with('error', __('cp.something_wrong'));
 
     }
+
+
+    public function subCat(Request $request)
+    {
+
+        $category_id = $request->cat_id;
+
+        $subcategories = SubCategory::where('category_id',$category_id)
+            //->with('subcategories')
+            ->get();
+        return response()->json([
+            'subcategories' => $subcategories
+        ]);
+    }
+
 
     function destroy($id)
     {

@@ -37,15 +37,11 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 control-label">{{__('cp.category')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="category_id">
-                                            <option value="">{{__('cp.all')}}</option>
-
-                                            @foreach(\App\Models\ecommerce\Category::get() as $category)
-                                                <option value="{{$category->id}}" {{(Request::get('category_id') == $category->id) ? 'selected' : ''}}>
-                                                    {{$category->name}}
-                                                </option>
+                                        <select class="form-control" name="category_id" id="category" >
+                                            <option >Select category</option>
+                                            @foreach (\App\Models\ecommerce\Category::get() as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
-
                                         </select>
                                     </div>
                                 </div>
@@ -54,17 +50,9 @@
 
                             <div class="col-md-3">
                                 <div class="form-group row">
-                                    <label class="col-md-3 control-label">{{__('cp.sub_category')}}</label>
+                                    <label></label>{{__('cp.sub_category')}}</label>
                                     <div class="col-md-9">
-                                        <select id="multiple2" class="form-control" name="sub_category_id">
-                                            <option value="">{{__('cp.all')}}</option>
-
-                                            @foreach(\App\Models\ecommerce\SubCategory::get() as $subCategory)
-                                                <option value="{{$subCategory->id}}" {{(Request::get('sub_category_id') == $subCategory->id) ? 'selected' : ''}}>
-                                                    {{$subCategory->name}}
-                                                </option>
-                                            @endforeach
-
+                                        <select style="width: 120px;" class="form-control" name="sub_category_id" id="subcategory">
                                         </select>
                                     </div>
                                 </div>
@@ -231,6 +219,34 @@
 
         $('.btn--filter').click(function () {
             $('.box-filter-collapse').slideToggle(500);
+        });
+    </script>
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $(document).ready(function () {
+            $('#category').on('change',function(e) {
+                var cat_id = e.target.value;
+                $.ajax({
+                    url:"{{ url('subcat') }}",
+                    type:"POST",
+                    data: {
+                        cat_id: cat_id,
+                         _token: '{{csrf_token()}}'
+                    },
+                    dataType: 'json',
+                    success:function (data) {
+                        $('#subcategory').empty();
+                        $.each(data.subcategories,function(index,subcategory){
+                            $('#subcategory').append('<option value="'+subcategory.id+'">'+subcategory.name+'</option>');
+                        })
+                    }
+                })
+            });
         });
     </script>
 @endsection

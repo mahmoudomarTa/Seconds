@@ -148,8 +148,11 @@ class ProductController extends Controller
             'status' => 'required',
             'price' => 'required|numeric|min:0',
             'discount' => 'numeric|min:0|max:99',
-            'offer_from' => 'required_unless:discount,0|date|after:yesterday',
-            'offer_to' => 'required_unless:discount,0|date|after:offer_from|after:yesterday',
+            'offer_from' => 'required_unless:discount,0',
+            'offer_to' => 'required_unless:discount,0|after:'.(int)$request->offer_from ,
+//
+//            'offer_from' => 'required_unless:discount,0|date|after:yesterday',
+//            'offer_to' => 'required_unless:discount,0|date|after:offer_from|after:yesterday',
         ];
         $locales = Language::all()->pluck('lang');
         foreach ($locales as $locale) {
@@ -163,7 +166,11 @@ class ProductController extends Controller
         $product->category_id = $request->get('category_id');
         $product->sub_category_id = $request->get('sub_category_id');
         $product->status = $request->get('status');
-
+        if ($request->has('discount')&&$request->has('offer_from')&&$request->has('offer_to')) {
+            $product->discount = $request->get('discount');
+            $product->offer_from = $request->get('offer_from');
+            $product->offer_to = $request->get('offer_to');
+        }
         foreach ($locales as $locale) {
             $product->translateOrNew($locale)->name = $request->get('name_' . $locale);
             $product->translateOrNew($locale)->description = $request->get('description_' . $locale);

@@ -36,7 +36,7 @@ class Product extends Model
         $offer_to = $this->offer_to;
         $discount=$this->discount;
 
-        if ($offer_to >= now()->toDateString()&&$this->status=='active') {
+        if ($offer_to >= now()->toDateString()&&$offer_from < now()->toString()&&$this->status=='active') {
             if ($discount!=null&&$discount>0) {
                 return $discount;
             }
@@ -49,7 +49,7 @@ class Product extends Model
     {
         $offer_from = $this->offer_from;
         $offer_to = $this->offer_to;
-        if ( $offer_to >= now()->toDateString()&&$this->status=='active') {
+        if ( $offer_to >= now()->toDateString()&&$offer_from < now()->toString()&&$this->status=='active') {
             $price = $this->price;
             $discount = $this->discount;
             $discount = ($price * $discount) / 100;

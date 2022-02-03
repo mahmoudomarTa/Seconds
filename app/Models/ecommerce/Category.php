@@ -18,6 +18,10 @@ class Category extends Model implements TranslatableContract
     protected $fillable = ['image'];
     protected $hidden = ['updated_at', 'deleted_at','translations'];
 
+    public function subcategories(){
+        return $this->hasMany('App\Models\ecommerce\SubCategory', 'category_id');
+    }
+
     public function getImageAttribute($value)
     {
         if($value){
